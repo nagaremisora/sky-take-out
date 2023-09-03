@@ -90,16 +90,29 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         if(query().eq("name", dish.getName()).one() != null) {
             return Result.error(MessageConstant.DISH_EXIST);
         }
+        dish.setStatus(1);
         save(dish);
         dishFlavors.forEach(e -> e.setDishId(dish.getId()));
         dishFlavorService.saveBatch(dishFlavors);
         return Result.success();
     }
 
+    /**
+     * 修改菜品
+     * @param dish
+     * @param dishFlavors
+     * @return
+     */
     @Override
+    @Transactional
     @AutoFill(OperationType.UPDATE)
     public Result updateDish(Dish dish, List<DishFlavor> dishFlavors) {
-        return null;
+        if(query().eq("name", dish.getName()).one() != null) {
+            return Result.error(MessageConstant.DISH_EXIST);
+        }
+        updateById(dish);
+        dishFlavorService.updateBatchById(dishFlavors);
+        return Result.success();
     }
 
     /**

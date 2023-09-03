@@ -75,8 +75,22 @@ public class DishController {
         return dishService.updateStatus(dish);
     }
 
+    /**
+     * 修改菜品
+     * @param dishVO
+     * @return
+     */
     @PutMapping
     public Result updateDish(@RequestBody DishVO dishVO) {
-        return null;
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishVO, dish);
+        return dishService.updateDish(dish, dishVO.getFlavors());
+    }
+
+    @DeleteMapping
+    public Result deleteDish(@RequestParam List<Long> ids) {
+        System.out.println(ids);
+        dishService.removeByIds(ids);
+        return Result.success();
     }
 }

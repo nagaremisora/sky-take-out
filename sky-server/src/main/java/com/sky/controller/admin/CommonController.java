@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/admin/common")
 public class CommonController {
-    public static final String UPLOAD_DIR = "D:/BaiduNetdiskDownload/nginx-1.20.2/html/sky/img/upload";
+    public static final String UPLOAD_DIR = "D:/nginx-1.20.2/html/sky/img/upload";
 
     @PostMapping("/upload")
     public Result<String> uploadFile(@RequestBody MultipartFile file, HttpServletRequest request) {
