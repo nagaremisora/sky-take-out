@@ -1,17 +1,14 @@
 package com.sky.config;
 
-import com.sky.interceptor.AllInterceptor;
-import com.sky.interceptor.LoginInterceptor;
+import com.sky.interceptor.EmployeeLoginInterceptor;
+import com.sky.interceptor.WXLoginInterceptor;
 import com.sky.json.JacksonObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -23,9 +20,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AllInterceptor(redisTemplate)).addPathPatterns("/**").order(0);
-        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/employee/login").order(1);
+        registry.addInterceptor(new EmployeeLoginInterceptor(redisTemplate)).addPathPatterns("/admin/**")
+                .excludePathPatterns("/admin/employee/login");
+        registry.addInterceptor(new WXLoginInterceptor(redisTemplate)).addPathPatterns("/user/**")
+                .excludePathPatterns("/user/user/login")
+                .excludePathPatterns("/user/shop/status");
     }
 
     @Override

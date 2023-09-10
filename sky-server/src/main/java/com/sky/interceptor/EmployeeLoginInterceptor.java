@@ -5,9 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.sky.constant.RedisConstant;
 import com.sky.utils.EmployeeHolder;
 import com.sky.vo.EmployeeLoginVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class AllInterceptor implements HandlerInterceptor {
+public class EmployeeLoginInterceptor implements HandlerInterceptor {
     private StringRedisTemplate redisTemplate;
-    public AllInterceptor(StringRedisTemplate redisTemplate){
+    public EmployeeLoginInterceptor(StringRedisTemplate redisTemplate){
         this.redisTemplate = redisTemplate;
     }
 
@@ -25,12 +23,14 @@ public class AllInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("Token");
         if(StrUtil.isBlank(token)){
-            return true;
+            response.setStatus(401);
+            return false;
         }
         String tokenKey = RedisConstant.EMPLOYEE_LOGIN_TOKEN + token;
         Map<Object, Object> employeeMap = redisTemplate.opsForHash().entries(tokenKey);
         if(employeeMap.isEmpty()){
-            return true;
+            response.setStatus(401);
+            return false;
         }
         EmployeeHolder.saveUser(BeanUtil.fillBeanWithMap(employeeMap, new EmployeeLoginVO(), false));
         redisTemplate.expire(tokenKey, RedisConstant.EMPLOYEE_LOGIN_TOKEN_TTL, TimeUnit.MINUTES);

@@ -20,4 +20,6 @@ public interface DishService extends IService<Dish> {
     Result updateDish(Dish dish, List<DishFlavor> dishFlavors);
 
     Result updateStatus(Dish dish);
+
+    Result<List<DishVO>> getDishByCategoryId(Long categoryId);
 }

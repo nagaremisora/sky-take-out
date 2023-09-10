@@ -17,8 +17,11 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
 import com.sky.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -88,5 +91,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public Result onOffCategory(Category category) {
         updateById(category);
         return Result.success();
+    }
+
+    /**
+     * 用户端查询分类
+     * @param type
+     * @return
+     */
+    @Override
+    public Result<List<Category>> getCategoryList(Integer type) {
+        List<Category> categoryList = query().eq("type", type).eq("status", 1).list();
+        return Result.success(categoryList);
     }
 }
