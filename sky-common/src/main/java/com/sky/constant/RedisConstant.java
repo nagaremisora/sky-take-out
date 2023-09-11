@@ -7,4 +7,5 @@ public class RedisConstant {
     public final static String WX_USER_TOKEN = "wx:login:token:";
     public final static String DISH_BY_CATEGORY_ID = "dish:category:id:";
     public final static String SETMEAL_BY_CATEGORY_ID = "setmeal:category:id:";
+    public final static String DISH_BY_SETMEAL_ID = "dish:setmeal:id:";
 }

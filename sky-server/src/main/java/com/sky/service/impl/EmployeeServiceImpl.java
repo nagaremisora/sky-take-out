@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.annotation.AutoFill;
@@ -109,9 +110,10 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         }else {
             empList = query().orderByAsc("create_time").page(getPage).getRecords();
         }*/
-        List<Employee> empList = query().like(StrUtil.isNotBlank(employeePageQueryDTO.getName()), "name", employeePageQueryDTO.getName())
-                .orderByAsc("create_time").page(getPage).getRecords();
-        return Result.success(new PageResult(empList.size(), empList));
+        QueryChainWrapper<Employee> qcw = query().like(StrUtil.isNotBlank(employeePageQueryDTO.getName()), "name", employeePageQueryDTO.getName())
+                .orderByAsc("create_time");
+        List<Employee> empList = qcw.page(getPage).getRecords();
+        return Result.success(new PageResult(qcw.count(), empList));
     }
 
     /**

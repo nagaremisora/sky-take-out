@@ -22,6 +22,6 @@ public class UserSetMealController {
 
     @GetMapping("/dish/{id}")
     public Result<List<DishItemVO>> getDishById(@PathVariable Long id) {
-        return service.getDishBySetmealId(id);
+        return Result.success(service.getDishBySetmealId(id));
     }
 }
